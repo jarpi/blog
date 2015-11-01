@@ -1,0 +1,22 @@
+{
+"name" : "static-blog"
+,"version" : "1.0.0"
+,"dependencies" : {
+         "express": "^4.7.1"
+         ,"body-parser": "^1.5.1"
+         ,"method-override": "^2.1.2"
+        } 
+,"devDependencies": {
+	 "morgan" : "^1.6"
+         ,"nodemon" : "^1.4"
+         ,"mocha" : "^2.3.2" 
+         ,"should" : "^7.1.0"
+         ,"supertest" : "^1.1.0"
+
+}
+,"scripts" : {
+        "start":"node ./app.js &"
+        ,"stop":"killall -I node"
+        ,"test" : "npm start && node_modules/.bin/mocha -A ./tests/unit && node_modules/.bin/mocha -A ./tests/functional && npm stop"
+        }
+}
