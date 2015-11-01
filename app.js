@@ -1,6 +1,6 @@
 "use strict" 
 
-var express = require('express');
+var express = require('express'),
         app = express(),
         bodyParser = require('body-parser'),
         methodOverride = require('method-override');
@@ -8,7 +8,7 @@ var express = require('express');
 var morgan = require('morgan');
 // var jwt = require('jsonwebtoken');
 var nodemon = require('nodemon');
-var config = require('./config/config.js');
+// var config = require('./config/config.js');
 
 //******************
 // Config **********
@@ -17,7 +17,7 @@ var port = process.env.port || 8080;
 // mongoose.connect(config.db_connection);
 app.use(bodyParser.urlencoded( {extended: false}));
 app.use(bodyParser.json());
-if(config.environment === "dev") app.use(morgan('dev'));
+// if(config.environment === "dev") app.use(morgan('dev'));
 
 //************
 // Routes ****

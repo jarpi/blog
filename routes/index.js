@@ -38,8 +38,6 @@ module.exports = function( app ) {
 	// Catch all *********
 	//******************** 
 	app.use(function(req, res) {
-		res.status(404); 	
-	}); 
-
-
+		res.send('Catch all').status(404); 	
+	});
 }; 

@@ -17,11 +17,12 @@ module.exports = function postsRouter( app ) {
         defaultRouter.route('/')
                 .get(function( req , res ) {
 			// /blog/index ... 
-
+			res.send('/blog/').status(200); 
 	       });
-	defaultRouter.route('/post')
+	defaultRouter.route('/post/:postname')
                 .get(function( req , res ) {
 			// /blog/post/a-long-name-post 
+			res.send('/blog/post/').status(200); 
 	       });
 	//************
         // Init ******
