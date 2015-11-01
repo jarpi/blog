@@ -19,16 +19,11 @@ module.exports = function( app ) {
                 /* logRequestCtrl.addLog(logRequest, function( err , log ) {
                         if (err) throw(err); 
                         // console.dir(logRequest); 
-                }); */  
+                }); */ 
+		res.set('Content-Type', 'text/html'); 
                 next();  
         });  
-	
-	app.use(function(err, req, res, next){
-		// Uncaught exception 
-		console.error("Hey! An error was thrown!" + err.stack || err.message); 
-		res.send('Oops! that\'s embarassing :$').status(500); 
-	});
- 	
+	 	
         //****************
         // Routes init ***
         //**************** 
@@ -40,4 +35,15 @@ module.exports = function( app ) {
 	app.use(function(req, res) {
 		res.send('Catch all').status(404); 	
 	});
+	
+	//*****************
+	// Error Handler ** 
+	//
+	//***************** 
+	app.use(function(err, req, res, next){
+		// Uncaught exception 
+		console.error("Hey! An error was thrown!" + err.stack || err.message); 
+		res.send('Oops! that\'s embarassing :$').status(500); 
+	});
+
 }; 
