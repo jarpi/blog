@@ -1,6 +1,6 @@
 "use strict" 
 
-var posts = require('../controllers/runner.js'); 
+var postsParser = require('../controllers/render.js'); 
 
 module.exports = function postsRouter( app ) {
 
@@ -20,7 +20,7 @@ module.exports = function postsRouter( app ) {
         defaultRouter.route( '/' )
                 .get(function( req, res, next ) {
 			// /blog/index ...
-			return posts.render('') 
+			return postsParser.render('') 
 			.then(function(r) { 
 				return res.send(r).status(200); 
 			}) 
@@ -29,7 +29,7 @@ module.exports = function postsRouter( app ) {
 	defaultRouter.route( '/posts/:postname' )
                 .get(function( req, res, next ) {
 			// /blog/post/a-long-name-post
-			return posts.render('') 
+			return postsParser.render('') 
 			.then(function(r) { 
 				return res.send(r).status(200); 
 			})
