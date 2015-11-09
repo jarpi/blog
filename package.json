@@ -12,11 +12,15 @@
          ,"mocha" : "^2.3.2" 
          ,"should" : "^7.1.0"
          ,"supertest" : "^1.1.0"
+	 ,"mocha" : "^2.3.3"
+	 ,"chai" : "^3.4.1" 
+	 ,"chai-as-promised" : "^5.1.0"
 
 }
 ,"scripts" : {
         "start":"node ./app.js &"
         ,"stop":"killall -I node"
+	,"test-unit" : "node_modules/.bin/mocha -A ./specs/unit" 
         ,"test" : "npm start && node_modules/.bin/mocha -A ./tests/unit && node_modules/.bin/mocha -A ./tests/functional && npm stop"
         }
 }
