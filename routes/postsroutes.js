@@ -1,6 +1,6 @@
 "use strict" 
 
-var parser = require('../controllers/runner.js'); 
+var posts = require('../controllers/runner.js'); 
 
 module.exports = function postsRouter( app ) {
 
@@ -17,21 +17,23 @@ module.exports = function postsRouter( app ) {
 	//************
         // Routes ****
         //************
-        defaultRouter.route('/')
-                .get(function( req , res ) {
+        defaultRouter.route( '/' )
+                .get(function( req, res, next ) {
 			// /blog/index ...
-			var result = parser.findAndParsePost(''); 
-			result.then(function(r) { 
+			return posts.render('') 
+			.then(function(r) { 
 				return res.send(r).status(200); 
-			}); 
+			}) 
+			.catch(next); 
 	       });
-	defaultRouter.route('/post/:postname')
-                .get(function( req , res ) {
-			// /blog/post/a-long-name-post 
-			var result = parser.findAndParsePost(''); 
-			result.then(function(r) { 
+	defaultRouter.route( '/posts/:postname' )
+                .get(function( req, res, next ) {
+			// /blog/post/a-long-name-post
+			return posts.render('') 
+			.then(function(r) { 
 				return res.send(r).status(200); 
-			}); 
+			})
+			.catch(next);
 	       });
 	//************
         // Init ******

@@ -29,16 +29,16 @@ module.exports = function( app ) {
         //**************** 
         require('./postsroutes.js')( app ); 
 
-	//********************
-	// Catch all *********
-	//******************** 
+	//************************************** 
+	// Catch all / non blog routes *********
+	//************************************** 
 	app.use(function(req, res) {
 		res.send('Catch all').status(404); 	
 	});
 	
 	//*****************
 	// Error Handler ** 
-	//
+	//		 ** 
 	//***************** 
 	app.use(function(err, req, res, next){
 		// Uncaught exception 
