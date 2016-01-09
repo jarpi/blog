@@ -12,3 +12,9 @@ exports.polyfill = function(){
 		};
 	}; 
 }(); 
+
+exports.memwatch = function() {	
+	return (os.freemem()/1024<10*1000?true:false); 
+}
+
+ 
