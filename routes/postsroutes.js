@@ -12,31 +12,51 @@ module.exports = function postsRouter( app ) {
         //************
         // Router App*
         //************
-        var defaultRouter = express.Router();
+        var blogRouter = express.Router();
+        var portfolioRouter = express.Router();
 
-	//************
+    //************
         // Routes ****
         //************
-        defaultRouter.route( '/' )
+
+        // Blog ****** 
+        //************ 
+        blogRouter.route( '/' )
                 .get(function( req, res, next ) {
-			// /blog/index ...
-			return postsParser.render('') 
-			.then(function(r) { 
-				return res.send(r).status(200); 
-			}) 
-			.catch(next); 
-	       });
-	defaultRouter.route( '/posts/:postname' )
+            // /blog/index ...
+            return postsParser.render('') 
+            .then(function(r) { 
+                return res.send(r).status(200); 
+            }) 
+            .catch(next); 
+           });
+        blogRouter.route( '/posts/:postname' )
                 .get(function( req, res, next ) {
-			// /blog/post/a-long-name-post
-			return postsParser.render('') 
-			.then(function(r) { 
-				return res.send(r).status(200); 
-			})
-			.catch(next);
-	       });
-	//************
+            // /blog/post/a-long-name-post
+            return postsParser.render('') 
+            .then(function(r) { 
+                return res.send(r).status(200); 
+            })
+            .catch(next);
+           });
+        
+        // Portfolio *** 
+        //************** 
+        
+        portfolioRouter.route( '/' )
+                .get(function( req, res, next ) {
+            // /blog/index ...
+            return postsParser.combinePortfolioWithData() 
+            .then(function(r) { 
+                return res.send(r).status(200); 
+            }) 
+            .catch(next); 
+           });
+
+        //************
         // Init ******
         //************
-        app.use('/blog', defaultRouter);
+        app.use('/blog', blogRouter);
+        app.use('/portfolio', portfolioRouter); 
 };                  
+

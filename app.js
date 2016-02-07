@@ -17,6 +17,7 @@ var port = process.env.port || 8080;
 // mongoose.connect(config.db_connection);
 app.use(bodyParser.urlencoded( {extended: false}));
 app.use(bodyParser.json());
+app.use(express.static('public')); 
 // if(config.environment === "dev") app.use(morgan('dev'));
 
 //************
@@ -27,3 +28,4 @@ require('./routes/index.js')( app );
 
 app.listen(port);
 console.log('app initialized');
+
