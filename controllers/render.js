@@ -50,24 +50,27 @@ function combinePortfolioWithData() {
     var data = require('../portfolio/data.json'); 
     return fs.readFileAsync('./portfolio/index.html', 'utf8')
     .then(function(tpl) {
-        return Object.keys(data).reduce(function(ant, act) {
-            console.log('REP ' + ant); 
+        return Object.keys(data).reduce(function(ant, key) {
+            if (!data[key]) return ant; 
             var parsedData = null; 
-            var startTag = tpl.indexOf('{{' + act + '}}') + act.length+4; 
-            var endTag = tpl.indexOf('{{/' + act + '}}') + act.length-6; 
-            if (Array.isArray(data[act])) {
+            var startKey = '{{' + key + '}}'; 
+            var endKey = '{{/' + key + '}}'; 
+            var startTag = ant.indexOf(startKey) + startKey.length; 
+            var endTag = ant.indexOf(endKey); 
+            if (Array.isArray(data[key]) && data[key].length > 0) {
+                debugger; 
                 // Should create multiple elements where object is found 
-                var tagTpl = tpl.substr(startTag, endTag - startTag); 
-                parsedData = data[act].map(function(item) {
-                    return Object.keys(item).reduce(function(prev, prop) {
-                        var t = prev.replace('{{'+ act +'.'+ prop + '}}', item[prop]); 
-                        return t;  
-                    }, tagTpl); 
+                var tagFromTplToRepeat = ant.substr(startTag, endTag - startTag); 
+                parsedData = data[key].map(function(dataToRepeat) {
+                    return Object.keys(dataToRepeat).reduce(function(finalString, prop) {
+                        return finalString.replace('{{'+ key+'.'+ prop + '}}', dataToRepeat[prop]); 
+                    }, tagFromTplToRepeat); 
                 });  
-                console.log(parsedData); 
             };  
-            var rep = parsedData ? (ant.substr(0, startTag-startTag.length) + parsedData.join('') + ant.substr(endTag+endTag.length, ant.length-(endTag+endTag.length))) : false; 
-            return (parsedData ? rep : ant.replace('{{'+act+'}}', data[act]));         
+            var preReplace = ant.substr(0, startTag-startKey.length); 
+            var postReplace = ant.substr(endTag+endKey.length, ant.length-(endTag+endKey.length));
+            var rep = parsedData ? (preReplace + parsedData.join('') + postReplace) : null; 
+            return (parsedData ? rep : ant.replace('{{'+key+'}}', data[key]));         
         }, tpl);          
     }); 
 } 
