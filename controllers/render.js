@@ -46,7 +46,43 @@ function combineTemplateWithPost(parsedContent) {
     }); 
 } 
 
+function parseArrayTpl(data, key, tagFromTplToRepeat) {
+    return data[key].map(function(dataToRepeat) {
+        return Object.keys(dataToRepeat).reduce(function(finalString, prop) {
+            return finalString.replace('{{'+ key+'.'+ prop + '}}', dataToRepeat[prop]); 
+        }, tagFromTplToRepeat); 
+    });  
+} 
+
 function combinePortfolioWithData() {
+    var portfolioData = require('../portfolio/data.json'); 
+    var tpl = null; 
+    return fs.readFileAsync('./portfolio/index.html', 'utf8')
+    .then(function(indexTpl) {
+        tpl = indexTpl; 
+        return Object.keys(portfolioData);           
+    }).then(function(dataArr){
+        return dataArr.reduce(function(ant, key) {
+            if (!portfolioData[key]) return ant; 
+            var parsedData = null; 
+            var startKey = '{{' + key + '}}'; 
+            var endKey = '{{/' + key + '}}'; 
+            var startTag = ant.indexOf(startKey) + startKey.length; 
+            var endTag = ant.indexOf(endKey); 
+            if (Array.isArray(portfolioData[key]) && portfolioData[key].length > 0) {
+                var tagFromTplToRepeat = ant.substr(startTag, endTag - startTag); 
+                parsedData = parseArrayTpl(portfolioData, key, tagFromTplToRepeat); 
+            };  
+            var preReplace = ant.substr(0, startTag-startKey.length); 
+            var postReplace = ant.substr(endTag+endKey.length, ant.length-(endTag+endKey.length));
+            var rep = parsedData ? (preReplace + parsedData.join('') + postReplace) : null; 
+            return (parsedData ? rep : ant.replace('{{'+key+'}}', portfolioData[key]));         
+        }, tpl);
+    }); 
+} 
+
+
+/* function combinePortfolioWithData() {
     var data = require('../portfolio/data.json'); 
     return fs.readFileAsync('./portfolio/index.html', 'utf8')
     .then(function(tpl) {
@@ -73,7 +109,7 @@ function combinePortfolioWithData() {
             return (parsedData ? rep : ant.replace('{{'+key+'}}', data[key]));         
         }, tpl);          
     }); 
-} 
+} */ 
 
 function parsePost(postName) {
     return loadPost()   
