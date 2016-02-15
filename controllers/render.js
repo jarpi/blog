@@ -46,12 +46,45 @@ function combineTemplateWithPost(parsedContent) {
     }); 
 } 
 
+function composeRepeatingBlock(portfolioData, key, ant, startIdx, endIdx) {
+    var tagFromTplToRepeat = ant.substr(startIdx, endIdx - startIdx); 
+    return parseArrayTpl(portfolioData, key, tagFromTplToRepeat); 
+} 
+
+
 function parseArrayTpl(data, key, tagFromTplToRepeat) {
     return data[key].map(function(dataToRepeat) {
         return Object.keys(dataToRepeat).reduce(function(finalString, prop) {
             return finalString.replace('{{'+ key+'.'+ prop + '}}', dataToRepeat[prop]); 
         }, tagFromTplToRepeat); 
     });  
+} 
+
+function getSearchObj(key, ant) {
+    var obj = {
+        startKey : '{{' + key + '}}', 
+        endKey : '{{/' + key + '}}' 
+    };  
+    obj.startTagIdx =  ant.indexOf(obj.startKey) + obj.startKey.length; 
+    obj.endTagIdx =  ant.indexOf(obj.endKey); 
+    return obj; 
+} 
+
+
+function getParsedTemplateWithData(tpl, dataArr, portfolioData) {
+    return dataArr.reduce(function(ant, key) {
+            var keyValue = portfolioData[key]; 
+            if (!keyValue) return ant; 
+            var parsedData = null; 
+            var objCoord = getSearchObj(key, ant);  
+            parsedData = (Array.isArray(keyValue) && keyValue.length > 0 ? 
+                composeRepeatingBlock(portfolioData, key, ant, objCoord.startTagIdx, objCoord.endTagIdx) : 
+                null); 
+            var preReplace = ant.substr(0, objCoord.startTagIdx-objCoord.startKey.length); 
+            var postReplace = ant.substr(objCoord.endTagIdx + objCoord.endKey.length, ant.length-(objCoord.endTagIdx + objCoord.endKey.length));
+            var rep = parsedData ? (preReplace + parsedData.join('') + postReplace) : null; 
+            return (parsedData ? rep : ant.replace('{{'+key+'}}', keyValue));         
+        }, tpl);
 } 
 
 function combinePortfolioWithData() {
@@ -62,22 +95,7 @@ function combinePortfolioWithData() {
         tpl = indexTpl; 
         return Object.keys(portfolioData);           
     }).then(function(dataArr){
-        return dataArr.reduce(function(ant, key) {
-            if (!portfolioData[key]) return ant; 
-            var parsedData = null; 
-            var startKey = '{{' + key + '}}'; 
-            var endKey = '{{/' + key + '}}'; 
-            var startTag = ant.indexOf(startKey) + startKey.length; 
-            var endTag = ant.indexOf(endKey); 
-            if (Array.isArray(portfolioData[key]) && portfolioData[key].length > 0) {
-                var tagFromTplToRepeat = ant.substr(startTag, endTag - startTag); 
-                parsedData = parseArrayTpl(portfolioData, key, tagFromTplToRepeat); 
-            };  
-            var preReplace = ant.substr(0, startTag-startKey.length); 
-            var postReplace = ant.substr(endTag+endKey.length, ant.length-(endTag+endKey.length));
-            var rep = parsedData ? (preReplace + parsedData.join('') + postReplace) : null; 
-            return (parsedData ? rep : ant.replace('{{'+key+'}}', portfolioData[key]));         
-        }, tpl);
+            return getParsedTemplateWithData(tpl, dataArr, portfolioData); 
     }); 
 } 
 
