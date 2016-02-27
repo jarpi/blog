@@ -1,6 +1,7 @@
 "use strict" 
 
-var postsParser = require('../controllers/render.js'); 
+var postsParser = require('../controllers/render-post.js'); 
+var siteParser = require('../controllers/render-site.js'); 
 
 module.exports = function postsRouter( app ) {
 
@@ -46,7 +47,7 @@ module.exports = function postsRouter( app ) {
         portfolioRouter.route( '/' )
                 .get(function( req, res, next ) {
             // /blog/index ...
-            return postsParser.combinePortfolioWithData() 
+            return siteParser.render('portfolio') 
             .then(function(r) { 
                 return res.send(r).status(200); 
             }) 

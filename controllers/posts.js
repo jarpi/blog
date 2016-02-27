@@ -6,7 +6,9 @@ var dict = {
 		posts[name] = {parsedFile: value, hitted: hits};  
 	}, 
 
-	getPosts:  function() { return posts; }  
+	getPosts:  function() { return posts; }, 
+    getPostByKey: function(postName) { return posts[postName]; }, 
+    existsPostByKey: function(postName) { return postName && posts[postName]; } 
  }; 
 
 module.exports = dict;  
